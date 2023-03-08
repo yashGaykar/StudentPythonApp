@@ -3,13 +3,15 @@ import requests
 import pandas as pd
 from settings import  NODE_APP
 from http import HTTPStatus
+from .service import *
 
 
 def getResults():
     try:
         params= request.get_json()
-        # file_type = request.json["file_type"]
-        # file_name = request.json["file_name"]
+        validate_file_type(params["file_type"])
+        validate_file_name(params["file_name"])
+
         if not ('token' in session.keys()):
             raise Exception("Login Required")
 

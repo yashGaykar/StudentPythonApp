@@ -4,11 +4,16 @@ import requests
 from settings import  NODE_APP
 from http import HTTPStatus
 from time import time
+from .service import *
+
 
 def login():
 
     params = request.get_json()
     try:
+        validate_email(params["email"])
+        validate_password(params["password"])
+
         if ('token' in session.keys()):
             session.pop('token')
         
@@ -23,7 +28,7 @@ def login():
             raise Exception(response.json()["message"])
     except Exception as err:
         # print(response)
-        return jsonify({"Error": err}), HTTPStatus.BAD_REQUEST
+        return jsonify({"Error": str(err)}), HTTPStatus.BAD_REQUEST
 
 
 def logout():
