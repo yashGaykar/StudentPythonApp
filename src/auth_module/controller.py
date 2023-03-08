@@ -1,7 +1,7 @@
 import json
 from flask import jsonify, request, session, redirect, url_for
 import requests
-from settings import ACCESS_TOKEN, NODE_APP
+from settings import  NODE_APP
 from http import HTTPStatus
 from time import time
 

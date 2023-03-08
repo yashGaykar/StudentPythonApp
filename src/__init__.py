@@ -1,7 +1,5 @@
 from flask import Flask, jsonify, make_response
-import requests
-import pandas as pd
-from settings import ACCESS_TOKEN,JWT_SECRET_KEY
+from settings import JWT_SECRET_KEY
 from .auth_module import auth_bp
 from .student_module import student_bp
 

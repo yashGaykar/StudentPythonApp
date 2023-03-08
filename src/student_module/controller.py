@@ -1,7 +1,7 @@
 from flask import jsonify, session, request
 import requests
 import pandas as pd
-from settings import ACCESS_TOKEN, NODE_APP
+from settings import  NODE_APP
 from http import HTTPStatus
 
 
