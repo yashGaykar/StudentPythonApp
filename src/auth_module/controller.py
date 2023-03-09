@@ -8,23 +8,29 @@ from .service import *
 
 
 def login():
+    """User Login"""
 
     params = request.get_json()
     try:
+        # validation
         validate_email(params["email"])
         validate_password(params["password"])
 
-        auth_service = AuthService()
+        #Login Service
+        response = AuthService.login(params["email"],params["password"])
 
-        response=auth_service.login(params["email"],params["password"])
+        return jsonify({"message":"Logged in Successfully"}), HTTPStatus.OK   
 
-        return jsonify(response), HTTPStatus.OK   
-
+    except KeyError as e:
+        return jsonify({"Error":f'{e} is required'})
     except Exception as err:
         return jsonify({"Error": str(err)}), HTTPStatus.BAD_REQUEST
 
 
 def logout():
+    """User Logout"""
+
+    
     if ('token' in session.keys()):
         session.pop("token")
         return jsonify({"message": "Successfully Logged Out"})

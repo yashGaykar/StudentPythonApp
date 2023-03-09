@@ -16,10 +16,16 @@ def getResults():
             raise Exception("Login Required")
 
         student_service = StudentService()
+        
+        """Function creates file and return results"""
         response = student_service.getResults(
             params["file_name"], params["file_type"])
        
 
         return jsonify(response), HTTPStatus.OK
+
+    except KeyError as e:
+        return jsonify({"Error":f'{e} is required'})
+
     except Exception as e:
         return jsonify({"Error": str(e)}), HTTPStatus.BAD_REQUEST

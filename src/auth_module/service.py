@@ -1,5 +1,32 @@
 import re
+from flask import jsonify, request, session, redirect, url_for
+import requests
+from http import HTTPStatus
 
+from settings import NODE_APP
+
+from ..utils import RequestsService
+
+
+class AuthService:
+    """Auth Services"""
+
+    def login(email,password):
+        """Function to start a session with a token"""
+        
+        if ('token' in session.keys()):
+            session.pop('token')
+        
+        data = ({"email": email, "password": password})
+        response = requests.post(f'{NODE_APP}/admin/login', json=data)
+
+        if response.status_code == 200:
+            token = response.json()['token']
+            session['token'] = token
+            return response.json()
+
+        else:
+            raise Exception(response.json()["message"])
 
 def validate_email(email):
     if not (isinstance(email, str)):

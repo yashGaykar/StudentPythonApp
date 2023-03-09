@@ -8,16 +8,18 @@ from src.utils import RequestsService
 class StudentService:
 
     def __init__(self):
+        """Student Service Constructor"""
         self.request_service=RequestsService()
         
     def getResults(self,file_name,file_type):
-
+        
         data=self.request_service.getRequest('/students')
 
         if (data.status_code != 200):
             raise Exception(data.json())
-            
+
         rows = []
+        # upadte record format
         for student in data.json():
             if (student["results"] != []):
                 for result in student["results"]:
@@ -43,8 +45,11 @@ class StudentService:
 
         df = pd.DataFrame(rows)
 
+        #creates EXCEL file
         if (file_type == "excel"):
             df.to_excel(f'{file_name}.xlsx', index=False)
+
+        #creates CSV file
         if (file_type == "csv"):
             df.to_csv(f'{file_name}.csv')
 
@@ -55,11 +60,15 @@ class StudentService:
 
 
 def validate_file_type(file_type):
+    """Validate File Type"""
+
     if not (isinstance(file_type, str)):
         raise Exception("File Type must be a String")
     elif file_type not in ['csv','excel']:
         raise Exception("File Type must be csv or excel")
 
 def validate_file_name(file_name):
+    """Validate File Name"""
+
     if not (isinstance(file_name, str)):
         raise Exception("File Name must be a String")
