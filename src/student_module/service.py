@@ -1,3 +1,57 @@
+from http import HTTPStatus
+import pandas as pd
+from flask import jsonify
+
+from src.utils import RequestsService
+
+
+class StudentService:
+    def getResults(self,file_name,file_type):
+
+        request_service=RequestsService()
+        data=request_service.getRequest('/students')
+
+        rows = []
+
+        if (data.status_code != 200):
+            raise Exception(data.json())
+            # return jsonify(data.json()), HTTPStatus.BAD_REQUEST
+
+        for student in data.json():
+            if (student["results"] != []):
+                for result in student["results"]:
+                    stud_data = {
+                        'student_id': student["_id"],
+                        'name': student["name"],
+                        'gender': student["gender"],
+                        'email': student["email"],
+                        'password': student["password"],
+                        'role': student["role"],
+                        'result_id': result['_id'],
+                        'result_exam_name': result['exam_name'],
+                        'result_physics': result['physics'],
+                        'result_chemistry': result['chemistry'],
+                        'result_mathematics': result['mathematics'],
+                        'result_biology': result['biology'],
+                        'result_status': result['status']
+                    }
+                    if (result["percentage"]):
+                        stud_data["result_total"] = result['total']
+                        stud_data["result_percentage"] = result['percentage']
+                    rows.append(stud_data)
+
+        df = pd.DataFrame(rows)
+
+        if (file_type == "excel"):
+            df.to_excel(f'{file_name}.xlsx', index=False)
+        if (file_type == "csv"):
+            df.to_csv(f'{file_name}.csv')
+
+        return rows
+
+
+
+
 
 def validate_file_type(file_type):
     if not (isinstance(file_type, str)):

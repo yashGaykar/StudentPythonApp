@@ -9,6 +9,6 @@ auth_bp = Blueprint(
 auth_bp.add_url_rule(
     '/login', 'login', login, methods=['POST'])
 
-# # Logout
-# auth_bp.add_url_rule(
-#     '/logout', 'logout', logout, methods=['POST'])
+# Logout
+auth_bp.add_url_rule(
+    '/logout', 'logout', logout, methods=['POST'])
