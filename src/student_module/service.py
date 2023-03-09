@@ -6,17 +6,18 @@ from src.utils import RequestsService
 
 
 class StudentService:
+
+    def __init__(self):
+        self.request_service=RequestsService()
+        
     def getResults(self,file_name,file_type):
 
-        request_service=RequestsService()
-        data=request_service.getRequest('/students')
-
-        rows = []
+        data=self.request_service.getRequest('/students')
 
         if (data.status_code != 200):
             raise Exception(data.json())
-            # return jsonify(data.json()), HTTPStatus.BAD_REQUEST
-
+            
+        rows = []
         for student in data.json():
             if (student["results"] != []):
                 for result in student["results"]:

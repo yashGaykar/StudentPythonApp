@@ -18,8 +18,9 @@ def login():
 
         response=auth_service.login(params["email"],params["password"])
 
-        return jsonify(response), HTTPStatus.OK    except Exception as err:
-        # print(response)
+        return jsonify(response), HTTPStatus.OK   
+
+    except Exception as err:
         return jsonify({"Error": str(err)}), HTTPStatus.BAD_REQUEST
 
 
