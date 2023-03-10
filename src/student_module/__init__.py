@@ -5,10 +5,7 @@ from .controller import *
 student_bp = Blueprint(
     'student', __name__, url_prefix='/api/student')
 
-# GET RESULTS
+# Get Results in excel or csv
 student_bp.add_url_rule(
     '/getResults', 'getResults', getResults, methods=['POST'])
 
-# # UPDATE RESULTS
-# student_bp.add_url_rule(
-#     '/updateResults', 'updateResults', updateResults, methods=['POST'])

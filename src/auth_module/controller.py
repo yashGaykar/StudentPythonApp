@@ -1,34 +1,38 @@
 import json
 from flask import jsonify, request, session, redirect, url_for
 import requests
-from settings import  NODE_APP
+from settings import NODE_APP
 from http import HTTPStatus
 from time import time
+from .service import *
+
 
 def login():
+    """User Login"""
 
     params = request.get_json()
     try:
-        if ('token' in session.keys()):
-            session.pop('token')
-        
-        url = f'{NODE_APP}/admin/login'
-        data = ({"email": params["email"], "password": params["password"]})
-        response = requests.post(url, json=data)
-        if response.status_code == 200:
-            token = response.json()['token']
-            session['token'] = token
-            return jsonify({"message": "Logged In Succesfully"}), HTTPStatus.OK
-        else:
-            raise Exception(response.json()["message"])
+        # validation
+        validate_email(params["email"])
+        validate_password(params["password"])
+
+        #Login Service
+        response = AuthService.login(params["email"],params["password"])
+
+        return jsonify({"message":"Logged in Successfully"}), HTTPStatus.OK   
+
+    except KeyError as e:
+        return jsonify({"Error":f'{e} is required'})
     except Exception as err:
-        # print(response)
-        return jsonify({"Error": err}), HTTPStatus.BAD_REQUEST
+        return jsonify({"Error": str(err)}), HTTPStatus.BAD_REQUEST
 
 
 def logout():
+    """User Logout"""
+
+    
     if ('token' in session.keys()):
         session.pop("token")
-        return jsonify({"message":"Successfully Logged Out"})
+        return jsonify({"message": "Successfully Logged Out"})
     else:
-        return jsonify({"message":"Already logged out"})
+        return jsonify({"message": "Already logged out"})
