@@ -1,19 +1,23 @@
 from http import HTTPStatus
 import pandas as pd
 from flask import jsonify
+import logging
 
 from src.utils import RequestsService
+
+# Creating Logger object
+logger = logging.getLogger("student")
 
 
 class StudentService:
 
     def __init__(self):
         """Student Service Constructor"""
-        self.request_service=RequestsService()
-        
-    def getResults(self,file_name,file_type):
-        
-        data=self.request_service.getRequest('/students')
+        self.request_service = RequestsService()
+
+    def getResults(self, file_name, file_type):
+
+        data = self.request_service.getRequest('/students')
 
         if (data.status_code != 200):
             raise Exception(data.json())
@@ -45,18 +49,17 @@ class StudentService:
 
         df = pd.DataFrame(rows)
 
-        #creates EXCEL file
+        # creates EXCEL file
         if (file_type == "excel"):
+            logger.info(f'Creating Excel File {file_name}.xlsx')
             df.to_excel(f'{file_name}.xlsx', index=False)
 
-        #creates CSV file
+        # creates CSV file
         if (file_type == "csv"):
+            logger.info(f'Creating CSV File {file_name}.csv')
             df.to_csv(f'{file_name}.csv')
 
         return rows
-
-
-
 
 
 def validate_file_type(file_type):
@@ -64,8 +67,9 @@ def validate_file_type(file_type):
 
     if not (isinstance(file_type, str)):
         raise Exception("File Type must be a String")
-    elif file_type not in ['csv','excel']:
+    elif file_type not in ['csv', 'excel']:
         raise Exception("File Type must be csv or excel")
+
 
 def validate_file_name(file_name):
     """Validate File Name"""
