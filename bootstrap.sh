@@ -2,4 +2,4 @@
 export FLASK_APP=./src
 export FLASK_ENV=development
 export FLASK_DEBUG=1
-flask run -p 5000
+flask run
